@@ -3,10 +3,133 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp_Lab2_OOP_MusicCatalog"
+        xmlns:viewModel="clr-namespace:WpfApp_Lab2_OOP_MusicCatalog.ViewModel"
+        d:DataContext="{d:DesignInstance Type=viewModel:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MusicCatalog"
+        Height="500"
+        Width="500">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
+        <!-- Заголовок -->
+        <Grid Grid.Row="0">
+            <TextBlock Text="Лабораторная работа 2 - Галсанов Булат М4105" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="12" Margin="0,0,0,0"/>
+            <TextBlock Text="Каталог музыки" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" Margin="0,20,0,0"/>
+        </Grid>
+
+        <!-- Поиск -->
+        <Grid Grid.Row="1" VerticalAlignment="Top" Margin="0,20,0,0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" Height="30" Text="{Binding Query, UpdateSourceTrigger=PropertyChanged}" FontSize="14" />
+            <Button Grid.Column="1" Content="Найти" Width="100" Height="30" Command="{Binding SearchCommand}" />
+        </Grid>
+
+        <!-- Табы -->
+        <TabControl 
+            Grid.Row="2" 
+            Grid.ColumnSpan="2"
+            Margin="0,20,0,0" 
+            Height="Auto" 
+            Width="Auto" 
+            MinHeight="200" 
+            SelectedValuePath="Header" 
+            SelectedValue="{Binding SelectedTab}" 
+            >
+            <TabItem Header="Треки">
+                <ListBox ItemsSource="{Binding SearchResults}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5">
+                                <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold" />
+                                <TextBlock FontSize="12" Foreground="Gray" Text="{Binding ArtistInfo}" />
+                                <TextBlock FontSize="12" Foreground="Gray" Text="{Binding TrackInfo}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+
+            <TabItem Header="Альбомы">
+                <ListBox ItemsSource="{Binding SearchResults}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Expander Header="{Binding AlbumInfo}" FontSize="14" IsExpanded="False">
+                                <ItemsControl ItemsSource="{Binding Tracks}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Title}" FontSize="14" Margin="20,0,0,0" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Expander>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+
+            <TabItem Header="Плейлисты">
+                <ListBox ItemsSource="{Binding SearchResults}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Expander Header="{Binding Title}" FontSize="14" IsExpanded="False">
+                                <ItemsControl ItemsSource="{Binding Tracks}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock FontSize="12" Foreground="Gray" Text="{Binding DisplayInfo}" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Expander>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+
+            <TabItem Header="Исполнители">
+                <ListBox ItemsSource="{Binding SearchResults}" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="5">
+                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" />
+                                <Expander Header="Альбомы">
+                                    <ItemsControl ItemsSource="{Binding Albums}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Title}" FontSize="14" Margin="10,0,0,0"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Expander>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+        </TabControl>
+
+        <Grid Grid.Row="3" VerticalAlignment="Top" Margin="0,20,0,0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Margin="0, 0, 6, 0" Content="Добавить исполнителя" Height="30" Command="{Binding AddArtist}" />
+            <Button Grid.Column="1" Margin="6, 0, 0, 0" Content="Добавить сингл" Height="30" Command="{Binding AddSingle}" />
+        </Grid>
+        
+        <Button Grid.Row="4" Margin="0, 20, 0, 0" Content="Расширенный поиск треков" Height="30" Command="{Binding OpenTracksExtendedSearchWindowCommand}" IsEnabled="True"/>
     </Grid>
 </Window>

@@ -1,13 +1,7 @@
-﻿using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using WpfApp_Lab2_OOP_MusicCatalog.Models;
+using WpfApp_Lab2_OOP_MusicCatalog.ViewModel;
 
 namespace WpfApp_Lab2_OOP_MusicCatalog
 {
@@ -16,9 +10,11 @@ namespace WpfApp_Lab2_OOP_MusicCatalog
     /// </summary>
     public partial class MainWindow : Window
     {
+        readonly MusicCatalogContext _dbContext = new();
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel(_dbContext);
         }
     }
 }
